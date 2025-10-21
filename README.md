@@ -3,6 +3,7 @@
 A simple and lightweight **URL shortener service** built using **Go (Gin framework)** and **MySQL**.  
 It provides RESTful APIs to shorten URLs, update or delete existing ones, and retrieve access statistics.
 
+https://roadmap.sh/projects/url-shortening-service
 ---
 
 ## 🐳 Running the Project with Docker Compose
