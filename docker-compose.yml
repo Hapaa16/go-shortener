@@ -1,0 +1,38 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: shortener-db
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      MYSQL_DATABASE: appdb
+      MYSQL_USER: shortener-user
+      MYSQL_PASSWORD: pass123
+      MYSQL_ROOT_PASSWORD: pass123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u${MYSQL_USER} -p${MYSQL_PASSWORD} || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  app:
+    build: .
+    container_name: shortener-backend
+    env_file: .env
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+
